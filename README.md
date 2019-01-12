@@ -1,8 +1,25 @@
 # [Code::Stats](https://codestats.net/) plugin for [Zsh](http://www.zsh.org/)
 
-Code-stats-zsh hooks onto Zsh, counts characters as you type and saves your statistics in Code::Stats. You'll receive XP for the language `Terminal (Zsh)` for each character, backspace/delete and enter you type.
+## This a fork of the original [zsh-codestats plugin](https://github.com/dancek/zsh-codestats) Licensed to `Hannu Hartikainen`
 
-This plugin is an early beta, so expect some rough edges.
+[![GitHub tag](https://img.shields.io/github/tag/eendroroy/zsh-codestats.svg)](https://github.com/eendroroy/zsh-codestats/tags)
+
+[![Contributors](https://img.shields.io/github/contributors/eendroroy/zsh-codestats.svg)](https://github.com/eendroroy/zsh-codestats/graphs/contributors)
+[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/eendroroy/zsh-codestats/master.svg)](https://github.com/eendroroy/zsh-codestats)
+[![license](https://img.shields.io/github/license/eendroroy/zsh-codestats.svg)](https://github.com/eendroroy/zsh-codestats/blob/master/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/eendroroy/zsh-codestats.svg)](https://github.com/eendroroy/zsh-codestats/issues)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/eendroroy/zsh-codestats.svg)](https://github.com/eendroroy/zsh-codestats/issues?q=is%3Aissue+is%3Aclosed)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/eendroroy/zsh-codestats.svg)](https://github.com/eendroroy/zsh-codestats/pulls)
+[![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/eendroroy/zsh-codestats.svg)](https://github.com/eendroroy/zsh-codestats/pulls?q=is%3Apr+is%3Aclosed)
+
+
+zsh-codestats hooks onto Zsh, counts characters as you type and saves your statistics in Code::Stats. 
+You'll receive XP for the following languages for each character you type.
+
+- `Terminal (Zsh)`
+- `Git`
+- `Vagrant`
+- `Docker`
 
 ## Installation
 
@@ -13,26 +30,38 @@ This plugin is an early beta, so expect some rough edges.
     ```
 1. Install and source the script in one of the following ways (in `.zshrc` after the environment variable):
 
-### Zgen
+### Zplug
 
 ```
-zgen load git@gitlab.com:code-stats/code-stats-zsh.git
+zplug "eendroroy/zsh-codestats"
 ```
 
-Add a line for the plugin, run `zgen update`, then restart the shell by e.g. `exec zsh`.
+Add a line for the plugin, run `zplug update`, then restart the shell by e.g. `exec zsh`.
 
 ### Manual installation
 
 Clone this git repo and source the script directly.
 
 ```
-source codestats.zsh
+source codestats.plugin.zsh
 ```
 
-### Other plugin managers (Zplug, Antigen, ...)
+### Running on Windows Subsystem for Linux
 
-Probably just pointing to the git repo will work.
+If you are running Zsh on Windows and see this message:
 
+```
+_codestats_send_pulse:23: nice(5) failed: operation not permitted
+```
+
+This is caused due to WSL not supporting `nice` and Zsh using it by default for
+backgrounded processes. As a workaround, in your `.zshrc`, set:
+
+```
+unsetopt BG_NICE
+```
+
+See the discussion in this related issue: https://github.com/Microsoft/WSL/issues/1887
 
 ## Options
 
@@ -40,6 +69,22 @@ Probably just pointing to the git repo will work.
 - `CODESTATS_API_URL`: the base URL to the Code::Stats API. Only set this if you know what you're doing! :)
 - `CODESTATS_LOG_FILE`: a log file for debugging. Must exist and be writable.
 
-## Other plugins
+## Contributing
 
-Plugins that wrap ZLE widgets should probably be loaded after `code-stats-zsh`. For example, [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting) needs to be loaded after `code-stats-zsh` for it to work properly.
+Bug reports and pull requests are welcome on GitHub at [zsh-codestats](https://github.com/eendroroy/zsh-codestats) repository.
+This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+
+  1. Fork it ( https://github.com/eendroroy/zsh-codestats/fork )
+  1. Create your feature branch (`git checkout -b my-new-feature`)
+  1. Commit your changes (`git commit -am 'Add some feature'`)
+  1. Push to the branch (`git push origin my-new-feature`)
+  1. Create a new Pull Request
+
+## Author
+
+* **Hannu Hartikainen** - *Original Author* - [dancek](https://github.com/dancek)
+* **indrajit** - *Owner* - [eendroroy](https://github.com/eendroroy)
+
+## License
+
+The project is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
