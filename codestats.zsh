@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-_codestats_version="0.3.9"
+_codestats_version="0.4.0"
 
 zmodload zsh/datetime
 
