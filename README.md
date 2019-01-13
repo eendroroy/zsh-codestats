@@ -20,6 +20,7 @@ You'll receive XP for the following languages for each character you type.
 - `Git`
 - `Vagrant`
 - `Docker`
+- `Gradle`
 
 ## Installation
 

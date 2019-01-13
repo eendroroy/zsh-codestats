@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-_codestats_version="0.4.0"
+_codestats_version="0.5.0"
 
 zmodload zsh/datetime
 
@@ -8,6 +8,7 @@ declare -g -i _codestats_xp=0
 declare -g -i _codestats_xp_git=0
 declare -g -i _codestats_xp_vagrant=0
 declare -g -i _codestats_xp_docker=0
+declare -g -i _codestats_xp_gradle=0
 declare -g -i _codestats_pulse_time=${EPOCHSECONDS}
 
 # Because each `curl` call is forked into a subshell to keep the interactive
@@ -120,6 +121,27 @@ _codestats_send_pulse()
 
         _codestats_xp_docker=0
     fi
+
+    # If there's accumulated Git XP, send it
+    if (( _codestats_xp_gradle > 0 )); then
+
+        _codestats_log "Sending Docker pulse (${_codestats_xp_gradle} xp) to $(_codestats_pulse_url)"
+
+        \curl \
+            --header "Content-Type: application/json" \
+            --header "X-API-Token: ${CODESTATS_API_KEY}" \
+            --user-agent "code-stats-zsh/${_codestats_version}" \
+            --data "$(_codestats_payload_gradle)" \
+            --request POST \
+            --silent \
+            --output /dev/null \
+            --write-out "%{http_code}" \
+            "$(_codestats_pulse_url)" \
+            | _codestats_handle_response_status \
+            &|
+
+        _codestats_xp_gradle=0
+    fi
 }
 
 # Error handling based on HTTP status
@@ -204,6 +226,17 @@ _codestats_payload_docker()
 EOF
 }
 
+# Create API payload
+_codestats_payload_gradle()
+{
+    cat <<EOF
+{
+    "coded_at": "$(\strftime %Y-%m-%dT%H:%M:%S%z ${EPOCHSECONDS})",
+    "xps": [{"language": "Gradle", "xp": ${_codestats_xp_gradle}}]
+}
+EOF
+}
+
 # Check time since last pulse; maybe send pulse
 _codestats_poll()
 {
@@ -214,6 +247,8 @@ _codestats_poll()
       _codestats_xp_vagrant+=$(echo ${_CMD} | wc -c)
     elif [[ ${_CMD} == docker* ]]; then
       _codestats_xp_docker+=$(echo ${_CMD} | wc -c)
+    elif [[ ${_CMD} == gradle* ]]; then
+      _codestats_xp_gradle+=$(echo ${_CMD} | wc -c)
     else
       _codestats_xp+=$(echo ${_CMD} | wc -c)
     fi
